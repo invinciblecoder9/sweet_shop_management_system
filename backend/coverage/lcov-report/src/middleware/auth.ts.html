@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for src/services/authService.ts</title>
+    <title>Code coverage report for src/middleware/auth.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../prettify.css" />
     <link rel="stylesheet" href="../../base.css" />
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../index.html">All files</a> / <a href="index.html">src/services</a> authService.ts</h1>
+        <h1><a href="../../index.html">All files</a> / <a href="index.html">src/middleware</a> auth.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">89.47% </span>
+                <span class="strong">82.35% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>17/19</span>
+                <span class='fraction'>14/17</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">60% </span>
+                <span class="strong">66.66% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>3/5</span>
+                <span class='fraction'>8/12</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">80% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>16/16</span>
+                <span class='fraction'>12/15</span>
             </div>
         
             
@@ -96,76 +96,73 @@
 <a name='L31'></a><a href='#L31'>31</a>
 <a name='L32'></a><a href='#L32'>32</a>
 <a name='L33'></a><a href='#L33'>33</a>
-<a name='L34'></a><a href='#L34'>34</a>
-<a name='L35'></a><a href='#L35'>35</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
+<a name='L34'></a><a href='#L34'>34</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import prisma from '../lib/prisma';
-import { Role } from '@prisma/client';
-import bcrypt from 'bcrypt';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 &nbsp;
-export async function register(email: string, password: string, role: Role = Role.USER) {
-  const hashed = await bcrypt.hash(password, 10);
-  const user = await prisma.user.create({
-    data: { email, password: hashed, role },
-  });
-&nbsp;
-  const token = jwt.sign(
-    { id: user.id, role: user.role },
-    process.env.JWT_SECRET!,
-    { expiresIn: '7d' }
-  );
-&nbsp;
-  return { user: { id: user.id, email: user.email, role: user.role }, token };
+declare global {
+  namespace Express {
+    interface Request {
+      user?: { id: number; role: string };
+    }
+  }
 }
 &nbsp;
-export async function login(email: string, password: string) {
-  const user = await prisma.user.findUnique({ where: { email } });
-  <span class="missing-if-branch" title="if path not taken" >I</span>if (!user) <span class="cstat-no" title="statement not covered" >throw new Error('Invalid credentials');</span>
+export const authenticate = (req: Request, res: Response, next: NextFunction) =&gt; {
+  const authHeader = req.headers.authorization;
+  <span class="missing-if-branch" title="if path not taken" >I</span>if (!authHeader<span class="branch-0 cbranch-no" title="branch not covered" >?.s</span>tartsWith('Bearer ')) {
+<span class="cstat-no" title="statement not covered" >    return res.status(401).json({ message: 'No token provided' });</span>
+  }
 &nbsp;
-  const match = await bcrypt.compare(password, user.password);
-  <span class="missing-if-branch" title="if path not taken" >I</span>if (!match) <span class="cstat-no" title="statement not covered" >throw new Error('Invalid credentials');</span>
+  const token = authHeader.split(' ')[1];
 &nbsp;
-  const token = jwt.sign(
-    { id: user.id, role: user.role },
-    process.env.JWT_SECRET!,
-    { expiresIn: '7d' }
-  );
+  try {
+    const payload = jwt.verify(token, process.env.JWT_SECRET!) as { id: number; role: string };
+    req.user = payload;
+    next();
+  } catch {
+<span class="cstat-no" title="statement not covered" >    return res.status(401).json({ message: 'Invalid or expired token' });</span>
+  }
+};
 &nbsp;
-  return { user: { id: user.id, email: user.email, role: user.role }, token };
-}</pre></td></tr></table></pre>
+export const adminOnly = (req: Request, res: Response, next: NextFunction) =&gt; {
+  <span class="missing-if-branch" title="if path not taken" >I</span>if (req.user<span class="branch-0 cbranch-no" title="branch not covered" >?.r</span>ole !== 'ADMIN') {
+<span class="cstat-no" title="statement not covered" >    return res.status(403).json({ message: 'Admin access required' });</span>
+  }
+  next();
+};</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
             </div><!-- /wrapper -->
