@@ -1,10 +1,9 @@
 import axios from 'axios';
 
-// Use the environment variable in production, fallback to localhost for development
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:3000/api';
 
 const api = axios.create({
-  baseURL: API_URL,  // ← Use the full URL from env
+  baseURL: API_URL,  
 });
 
 api.interceptors.request.use((config) => {
