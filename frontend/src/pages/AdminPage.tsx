@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../app/store';
 import api from '../services/api';
 import { toast } from 'react-toastify';
 import SweetCard from '../components/SweetCard';
+import { setSweets } from '../features/sweetsSlice'; // Import to refresh list
 
 interface Sweet {
   id: number;
@@ -14,8 +15,9 @@ interface Sweet {
 }
 
 export default function AdminPage() {
+  const dispatch = useDispatch();
+  const sweets = useSelector((state: RootState) => state.sweets.list); // Use Redux state
   const { user } = useSelector((state: RootState) => state.auth);
-  const [sweets, setSweets] = useState<Sweet[]>([]);
   const [form, setForm] = useState({ name: '', category: '', price: '', quantity: '0' });
   const [editingId, setEditingId] = useState<number | null>(null);
 
@@ -24,31 +26,33 @@ export default function AdminPage() {
   }, [user]);
 
   const fetchSweets = async () => {
-    const res = await api.get('/sweets');
-    setSweets(res.data);
+    try {
+      const res = await api.get('/sweets');
+      dispatch(setSweets(res.data)); // Dispatch to Redux
+    } catch (err) {
+      toast.error('Failed to load sweets');
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
+      const payload = {
+        name: form.name,
+        category: form.category,
+        price: Number(form.price),
+        quantity: Number(form.quantity),
+      };
       if (editingId) {
-        await api.put(`/sweets/${editingId}`, {
-          ...form,
-          price: Number(form.price),
-          quantity: Number(form.quantity),
-        });
+        await api.put(`/sweets/${editingId}`, payload);
         toast.success('Updated!');
       } else {
-        await api.post('/sweets', {
-          ...form,
-          price: Number(form.price),
-          quantity: Number(form.quantity),
-        });
+        await api.post('/sweets', payload);
         toast.success('Added new sweet!');
       }
       setForm({ name: '', category: '', price: '', quantity: '0' });
       setEditingId(null);
-      fetchSweets();
+      fetchSweets(); // Refresh
     } catch (err: any) {
       toast.error(err.response?.data?.message || 'Error');
     }
@@ -56,18 +60,27 @@ export default function AdminPage() {
 
   const handleDelete = async (id: number) => {
     if (window.confirm('Are you sure you want to delete this sweet?')) {
-      await api.delete(`/sweets/${id}`);
-      toast.success('Deleted');
-      fetchSweets();
+      try {
+        await api.delete(`/sweets/${id}`);
+        toast.success('Deleted');
+        fetchSweets(); // Refresh
+      } catch (err) {
+        toast.error('Delete failed');
+      }
     }
   };
 
   const handleRestock = async (id: number) => {
-    const amount = prompt('Restock amount:');
-    if (amount && Number(amount) > 0) {
-      await api.post(`/sweets/${id}/restock`, { amount: Number(amount) });
-      toast.success('Restocked!');
-      fetchSweets();
+    const amountStr = prompt('Restock amount:');
+    const amount = Number(amountStr);
+    if (amount && amount > 0) {
+      try {
+        await api.post(`/sweets/${id}/restock`, { amount });
+        toast.success('Restocked!');
+        fetchSweets(); // Refresh
+      } catch (err) {
+        toast.error('Restock failed');
+      }
     }
   };
 
@@ -122,7 +135,7 @@ export default function AdminPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {sweets.map((sweet) => (
             <div key={sweet.id} className="bg-white rounded-xl shadow-lg p-6">
-              <SweetCard sweet={sweet} onUpdate={fetchSweets} />
+              <SweetCard sweet={sweet} />
               <div className="mt-4 flex gap-2">
                 <button
                   onClick={() => {

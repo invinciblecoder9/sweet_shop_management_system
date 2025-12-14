@@ -3,6 +3,7 @@ import { RootState } from '../app/store';
 import api from '../services/api';
 import { toast } from 'react-toastify';
 import { updateSweetQuantity } from '../features/sweetsSlice';
+import { addPurchase } from '../features/purchaseHistorySlice';
 
 interface Sweet {
   id: number;
@@ -24,8 +25,14 @@ export default function SweetCard({ sweet, onUpdate }: Props) {
   const handlePurchase = async () => {
     try {
       const res = await api.post(`/sweets/${sweet.id}/purchase`);
-      dispatch(updateSweetQuantity({ id: sweet.id, quantity: res.data.quantity }));
-      toast.success('Purchased successfully! 🎉');
+        dispatch(updateSweetQuantity({ id: sweet.id, quantity: res.data.quantity }));
+        dispatch(addPurchase({
+        id: Date.now(),
+        sweetName: sweet.name,
+        sweetPrice: sweet.price,
+        purchasedAt: new Date().toISOString(),
+        }));
+        toast.success('Purchased successfully! 🎉');
     } catch (err: any) {
       toast.error(err.response?.data?.message || 'Out of stock!');
     }
