@@ -34,15 +34,28 @@ export async function deleteSweet(id: number) {
   return prisma.sweet.delete({ where: { id } });
 }
 
-export async function purchaseSweet(id: number) {
+export async function purchaseSweet(id: number, userId: number) {  // Add userId param
   const sweet = await prisma.sweet.findUnique({ where: { id } });
   if (!sweet || sweet.quantity <= 0) {
     throw new Error('Out of stock');
   }
-  return prisma.sweet.update({
+
+  const updatedSweet = await prisma.sweet.update({
     where: { id },
     data: { quantity: { decrement: 1 } },
   });
+
+
+  await prisma.purchase.create({
+    data: {
+      userId,
+      sweetId: id,
+      sweetName: sweet.name,
+      sweetPrice: sweet.price,
+    },
+  });
+
+  return updatedSweet;
 }
 
 export async function restockSweet(id: number, amount: number) {

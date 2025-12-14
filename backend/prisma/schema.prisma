@@ -12,6 +12,7 @@ model User {
   password  String
   role      Role     @default(USER)
   createdAt DateTime @default(now())
+  purchases Purchase[]
 }
 
 model Sweet {
@@ -20,6 +21,19 @@ model Sweet {
   category String
   price    Float
   quantity Int    @default(0)
+  purchases Purchase[]
+}
+
+model Purchase {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  sweetId     Int
+  sweetName   String
+  sweetPrice  Float
+  purchasedAt DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id])
+  sweet       Sweet    @relation(fields: [sweetId], references: [id])
 }
 
 enum Role {

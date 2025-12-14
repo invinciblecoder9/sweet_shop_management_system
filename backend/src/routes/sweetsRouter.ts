@@ -1,6 +1,7 @@
 import express from 'express';
 import { authenticate, adminOnly } from '../middleware/auth';
 import * as sweetService from '../services/sweetService';
+import prisma from '../lib/prisma';
 
 const router = express.Router();
 
@@ -19,6 +20,20 @@ router.post('/', adminOnly, async (req, res) => {
 router.get('/', async (req, res) => {
   const sweets = await sweetService.getAllSweets();
   res.json(sweets);
+});
+
+router.get('/my-purchases', async (req, res) => {
+  try {
+    const userId = req.user!.id;
+    const purchases = await prisma.purchase.findMany({
+      where: { userId },
+      orderBy: { purchasedAt: 'desc' },
+      include: { sweet: true }, // Optional: include current sweet details
+    });
+    res.json(purchases);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch purchases' });
+  }
 });
 
 router.get('/search', async (req, res) => {
@@ -55,7 +70,8 @@ router.delete('/:id', adminOnly, async (req, res) => {
 router.post('/:id/purchase', async (req, res) => {
   try {
     const id = Number(req.params.id);
-    const sweet = await sweetService.purchaseSweet(id);
+    const userId = req.user!.id;  // From authenticate middleware
+    const sweet = await sweetService.purchaseSweet(id, userId);
     res.json(sweet);
   } catch (error: any) {
     res.status(400).json({ message: error.message });
