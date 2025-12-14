@@ -37,17 +37,21 @@ export default function DashboardPage() {
   }, []);
 
   const fetchSweets = async (query = '') => {
-    setLoading(true);
-    try {
-      const endpoint = query ? `/sweets/search?name=${query}` : '/sweets';
-      const res = await api.get(endpoint);
-      dispatch(setSweets(res.data));
-    } catch (err) {
-      toast.error('Failed to load sweets');
-    } finally {
-      setLoading(false);
-    }
-  };
+  setLoading(true);
+  try {
+    const endpoint = query ? `/sweets/search?name=${query}` : '/sweets';
+    const res = await api.get(endpoint);
+    
+    const data = Array.isArray(res.data) ? res.data : [];
+    dispatch(setSweets(data));
+  } catch (err: any) {
+    console.error('Fetch sweets error:', err);
+    toast.error('Failed to load sweets — check if backend is running');
+    dispatch(setSweets([])); 
+  } finally {
+    setLoading(false);
+  }
+};
 
   const fetchPurchaseHistory = async () => {
     setHistoryLoading(true);
@@ -66,14 +70,17 @@ export default function DashboardPage() {
     fetchSweets(search);
   };
 
-  const filteredSweets = sweets.filter((sweet) => {
-    const matchesCategory = sweet.category.toLowerCase().includes(search.toLowerCase());
-    const maxPrice = parseFloat(search);
-    const matchesPrice = isNaN(maxPrice) || sweet.price <= maxPrice;
-    const matchesName = sweet.name.toLowerCase().includes(search.toLowerCase());
+  const safeSweets = Array.isArray(sweets) ? sweets : [];
 
-    return matchesName || matchesCategory || matchesPrice;
-  });
+const filteredSweets = safeSweets.filter((sweet) => {
+  const lowerSearch = search.toLowerCase();
+  const matchesName = sweet.name.toLowerCase().includes(lowerSearch);
+  const matchesCategory = sweet.category.toLowerCase().includes(lowerSearch);
+  const maxPrice = parseFloat(search);
+  const matchesPrice = isNaN(maxPrice) || sweet.price <= maxPrice;
+
+  return matchesName || matchesCategory || matchesPrice;
+});
 
   const openPurchaseHistory = () => {
     setShowHistory(true);

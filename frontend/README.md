@@ -1,46 +1,77 @@
-# Getting Started with Create React App
+# 🍭 Sweet Shop Management System
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A full-stack **Sweet Shop Management System** built with modern technologies, featuring user authentication, inventory management, purchase functionality, admin panel, purchase history, and persistent login. This project demonstrates clean architecture, Test-Driven Development (TDD), Redux state management, responsive UI, and thoughtful user experience.
 
-## Available Scripts
+**Live Demo**: [https://your-app.vercel.app](https://your-app.vercel.app) *(replace with your deployed link if available)*
 
-In the project directory, you can run:
+**Backend API**: `http://localhost:3000/api` (or deployed URL)
 
-### `npm start`
+## 🚀 Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### User Features
+- Register and login with JWT-based authentication
+- Persistent login across page refreshes (using `redux-persist`)
+- Browse available sweets in a beautiful responsive grid
+- Search and filter sweets by name, category, or price
+- Purchase sweets (quantity decreases in real-time)
+- Purchase button disabled when out of stock
+- View personal **purchase history** with date, item, and price
+- Real-time toast notifications for success/error
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### Admin Features
+- Dedicated Admin Panel (accessible only to ADMIN role)
+- Add new sweets
+- Update sweet details (name, category, price, quantity)
+- Delete sweets
+- Restock sweets with custom amount
+- All changes reflect instantly across the app
 
-### `npm test`
+### Technical Highlights
+- Full Test-Driven Development (TDD) with high coverage
+- Clean, maintainable code following SOLID principles
+- Responsive and visually appealing UI with Tailwind CSS
+- State management with Redux Toolkit
+- Prisma ORM with PostgreSQL (adapter for Prisma 7+)
+- JWT authentication with role-based access control
+- Purchase history tracking
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## 🛠️ Tech Stack
 
-### `npm run build`
+### Backend
+- **Node.js** + **TypeScript**
+- **Express.js**
+- **Prisma ORM** (with PostgreSQL adapter)
+- **PostgreSQL** database
+- **JWT** for authentication
+- **bcrypt** for password hashing
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Frontend
+- **React** + **TypeScript** (Create React App)
+- **Redux Toolkit** + **redux-persist**
+- **React Router** for navigation
+- **Tailwind CSS** for styling
+- **Axios** for API calls
+- **react-toastify** for notifications
+- **React Hook Form** for forms
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## 📸 Screenshots
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+![Login Page](./screenshots/login.png)
+*Clean and modern login interface*
 
-### `npm run eject`
+![Dashboard](./screenshots/dashboard.png)
+*Responsive sweets grid with search and purchase buttons*
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+![Purchase Success](./screenshots/purchase-success.png)
+*Real-time quantity update and toast notification*
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+![My Purchases Modal](./screenshots/my-purchases.png)
+*Detailed purchase history with timestamps*
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+![Admin Panel](./screenshots/admin-panel.png)
+*Full CRUD operations for sweets management*
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+![Admin Add/Edit](./screenshots/admin-add.png)
+*Easy form to add or update sweets*
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+## 🏗️ Project Structure
